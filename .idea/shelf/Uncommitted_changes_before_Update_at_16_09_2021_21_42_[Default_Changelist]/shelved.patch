@@ -1,0 +1,177 @@
+Index: js/script.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>'use strict'\r\nwindow.addEventListener('DOMContentLoaded', () => {\r\n  // tabs\r\n\r\n  const tabs = document.querySelectorAll('.tabheader__item'),\r\n      tabsContent = document.querySelectorAll('.tabcontent'),\r\n      tabsWrapper = document.querySelector('.tabheader__items');\r\n\r\n  function hideContentTabs() {\r\n    tabsContent.forEach(item => {\r\n      item.classList.add('hide');\r\n      item.classList.remove('show');\r\n\r\n      tabs.forEach((item) => {\r\n        item.classList.remove('tabheader__item_active');\r\n      })\r\n    })\r\n  }\r\n\r\n  function showContentTabs(i = 0) {\r\n    tabsContent[i].classList.add('show');\r\n    tabsContent[i].classList.remove('hide');\r\n    tabs[i].classList.add('tabheader__item_active');\r\n  }\r\n\r\n  tabsWrapper.addEventListener('click', (event) => {\r\n    const target = event.target;\r\n\r\n    if (target && target.classList.contains('tabheader__item')) {\r\n      tabs.forEach((item, i) => {\r\n        if (target === item) {\r\n          hideContentTabs()\r\n          showContentTabs(i)\r\n        }\r\n      })\r\n    }\r\n  });\r\n\r\n  hideContentTabs()\r\n  showContentTabs()\r\n  // timer\r\n\r\n  const deadline = '2021-11-11';\r\n\r\n  function getTimeRemaining(endtime) {\r\n    const t = Date.parse(endtime) - Date.parse(new Date()),\r\n        days = Math.floor(t / (1000 * 60 * 60 * 24)),\r\n        hours = Math.floor(t / (1000 * 60 * 60) % 24),\r\n        minutes = Math.floor(t / (1000 * 60) % 60),\r\n        seconds = Math.floor(t / (1000) % 60)\r\n\r\n    return {\r\n      'total': t,\r\n      'days': days,\r\n      'hours': hours,\r\n      'minutes': minutes,\r\n      'seconds': seconds\r\n    }\r\n  }\r\n\r\n  function addZero(num) {\r\n    if (num >= 0 && num < 10) {\r\n      return '0' + num;\r\n    } else {\r\n      return num;\r\n    }\r\n  }\r\n\r\n  function timerUpdate(selector, endtime) {\r\n    const timer = document.querySelector(selector),\r\n        days = timer.querySelector('#days'),\r\n        hours = timer.querySelector('#hours'),\r\n        minutes = timer.querySelector('#minutes'),\r\n        seconds = timer.querySelector('#seconds'),\r\n        interval = setInterval(timerInterval, 1000)\r\n\r\n    timerInterval()\r\n\r\n    function timerInterval() {\r\n      const t = getTimeRemaining(endtime);\r\n\r\n      days.innerHTML = addZero(t.days);\r\n      hours.innerHTML = addZero(t.hours);\r\n      minutes.innerHTML = addZero(t.minutes);\r\n      seconds.innerHTML = addZero(t.seconds);\r\n      if (t.total < 0) {\r\n        clearInterval(interval)\r\n      }\r\n    }\r\n  }\r\n\r\n  timerUpdate('.timer', deadline)\r\n\r\n\r\n  // modal\r\n  const openModals = document.querySelectorAll('button[data-modal]'),\r\n      closeModalbtn = document.querySelector('[data-close]'),\r\n      modal = document.querySelector('.modal'),\r\n      body = document.querySelector('body');\r\n\r\n  openModals.forEach((item) => {\r\n    item.addEventListener('click', () => {\r\n      modal.classList.toggle('show')\r\n      body.classList.add('no-scroll')\r\n    })\r\n  })\r\n\r\n  function closeModal() {\r\n    modal.classList.toggle('show')\r\n    body.classList.remove('no-scroll')\r\n  }\r\n\r\n  closeModalbtn.addEventListener('click', closeModal)\r\n\r\n  modal.addEventListener('click', (e) => {\r\n    const target = e.target;\r\n\r\n    if (target === modal) {\r\n      closeModal()\r\n    }\r\n  })\r\n\r\n  document.addEventListener('keydown', (e) => {\r\n    if (e.code === 'Escape' && modal.classList.contains('show')) {\r\n      closeModal()\r\n    }\r\n  })\r\n\r\n\r\n  class MenuCard {\r\n    constructor(src, alt, title, descr, price, parentSelector, ...classes) {\r\n      this.src = src;\r\n      this.alt = alt;\r\n      this.title = title;\r\n      this.descr = descr;\r\n      this.price = price;\r\n      this.classes = classes;\r\n      this.parent = document.querySelector(parentSelector);\r\n      this.transfer = 27;\r\n      this.changeToUA()\r\n    }\r\n\r\n    changeToUA() {\r\n      this.price = this.price * this.transfer\r\n    }\r\n\r\n    render() {\r\n      const element = document.createElement('div');\r\n      if (this.classes.length === 0) {\r\n        this.element = 'menu__item';\r\n        element.classList.add(this.element)\r\n      } else {\r\n        this.classes.forEach(className => element.classList.add(className))\r\n      }\r\n      element.innerHTML =\r\n          `<img src=\"${this.src}\" alt=\"${this.alt}\">\r\n            <h3 class=\"menu__item-subtitle\">Меню “${this.title}”</h3>\r\n            <div class=\"menu__item-descr\">${this.descr}</div>\r\n            <div class=\"menu__item-divider\"></div>\r\n            <div class=\"menu__item-price\">\r\n                <div class=\"menu__item-cost\">Цена:</div>\r\n                <div class=\"menu__item-total\"><span>${this.price}</span> грн/день</div>\r\n            </div>`;\r\n      this.parent.append(element)\r\n    }\r\n  }\r\n\r\n  new MenuCard(\r\n      'img/tabs/vegy.jpg',\r\n      'fitnes menu',\r\n      'Фитнес',\r\n      'Меню \"Фитнес\" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',\r\n      9,\r\n      '.menu .container',\r\n  ).render()\r\n\r\n  new MenuCard(\r\n      'img/tabs/elite.jpg',\r\n      'premium menu',\r\n      'Премиум',\r\n      'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',\r\n      14,\r\n      '.menu .container',\r\n      'menu__item'\r\n  ).render()\r\n\r\n  new MenuCard(\r\n      'img/tabs/post.jpg',\r\n      'simple menu',\r\n      'Постное',\r\n      'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',\r\n      20,\r\n      '.menu .container',\r\n      'menu__item'\r\n  ).render()\r\n\r\n  // Forms\r\n\r\n  const forms = document.querySelectorAll('form');\r\n  const message = {\r\n    loading: 'Загрузка',\r\n    success: 'Спасибо! Мы скоро с вами свяжемся.',\r\n    failure: 'Что-то пошло не так...'\r\n\r\n  };\r\n\r\n  forms.forEach(item => postData(item));\r\n\r\n  function postData(form) {\r\n    form.addEventListener('submit', (e) => {\r\n      e.preventDefault();\r\n\r\n      const statusMessage = document.createElement('div');\r\n            statusMessage.classList.add('status');\r\n            statusMessage.textContent = message.loading;\r\n            form.append(statusMessage);\r\n\r\n\r\n      const request = new XMLHttpRequest();\r\n      request.open('POST', 'server.php');\r\n\r\n      request.setRequestHeader('Content-type', 'application/json');\r\n      const formData = new FormData(form);\r\n\r\n      const object = {};\r\n      formData.forEach((value, key) => {\r\n        object[key] = value;\r\n      });\r\n\r\n      request.send(JSON.stringify(object));\r\n\r\n      request.addEventListener('load', () => {\r\n        if (request.status === 200) {\r\n          console.log(request.response);\r\n          form.reset();\r\n          statusMessage.textContent = message.success;\r\n          setInterval(function () {\r\n            statusMessage.remove();\r\n          }, 2000);\r\n        } else {\r\n          statusMessage.textContent = message.failure;\r\n        }\r\n      });\r\n\r\n    })\r\n  }\r\n});\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/js/script.js b/js/script.js
+--- a/js/script.js	(revision b150770d1c4de111b9018c657f5acbf6d5684814)
++++ b/js/script.js	(date 1631440383707)
+@@ -94,28 +94,26 @@
+ 
+   // modal
+   const openModals = document.querySelectorAll('button[data-modal]'),
+-      closeModalbtn = document.querySelector('[data-close]'),
+-      modal = document.querySelector('.modal'),
+-      body = document.querySelector('body');
++      modal = document.querySelector('.modal');
++
+ 
+   openModals.forEach((item) => {
+     item.addEventListener('click', () => {
+       modal.classList.toggle('show')
+-      body.classList.add('no-scroll')
++      document.body.classList.add('no-scroll')
+     })
+   })
+ 
+   function closeModal() {
+     modal.classList.toggle('show')
+-    body.classList.remove('no-scroll')
++    document.body.classList.remove('no-scroll')
+   }
+ 
+-  closeModalbtn.addEventListener('click', closeModal)
+ 
+   modal.addEventListener('click', (e) => {
+     const target = e.target;
+ 
+-    if (target === modal) {
++    if (target === modal || target.getAttribute('data-close') === '') {
+       closeModal()
+     }
+   })
+@@ -154,7 +152,7 @@
+       }
+       element.innerHTML =
+           `<img src="${this.src}" alt="${this.alt}">
+-            <h3 class="menu__item-subtitle">Меню “${this.title}”</h3>
++            <h3 class="menu__item-subtitle">“${this.title}”</h3>
+             <div class="menu__item-descr">${this.descr}</div>
+             <div class="menu__item-divider"></div>
+             <div class="menu__item-price">
+@@ -168,7 +166,7 @@
+   new MenuCard(
+       'img/tabs/vegy.jpg',
+       'fitnes menu',
+-      'Фитнес',
++      'Меню Фитнес',
+       'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+       9,
+       '.menu .container',
+@@ -177,7 +175,7 @@
+   new MenuCard(
+       'img/tabs/elite.jpg',
+       'premium menu',
+-      'Премиум',
++      'Меню Премиум',
+       'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+       14,
+       '.menu .container',
+@@ -187,7 +185,7 @@
+   new MenuCard(
+       'img/tabs/post.jpg',
+       'simple menu',
+-      'Постное',
++      'Меню Постное',
+       'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
+       20,
+       '.menu .container',
+@@ -233,15 +231,35 @@
+         if (request.status === 200) {
+           console.log(request.response);
+           form.reset();
+-          statusMessage.textContent = message.success;
+-          setInterval(function () {
+-            statusMessage.remove();
+-          }, 2000);
++          showThanksModal(message.success);
++          statusMessage.remove();
++
+         } else {
+-          statusMessage.textContent = message.failure;
++          showThanksModal(message.failure);
+         }
+       });
++    })
+ 
+-    })
++    function showThanksModal(message) {
++      const prevModalDialog = document.querySelector('.modal__dialog');
++
++      prevModalDialog.classList.add('hide');
++
++      const thanksModal = document.createElement('div');
++            thanksModal.classList.add('modal__dialog');
++            thanksModal.innerHTML = `
++                <div class="modal__content">
++                  <div class="modal__close" data-close>&times;</div>
++                  <div class="modal__title">${message}</div>
++                </div> 
++            `
++      document.querySelector('.modal').append(thanksModal);
++      setTimeout(() => {
++        thanksModal.remove();
++        prevModalDialog.classList.add('show');
++        prevModalDialog.classList.remove('hide');
++        closeModal();
++      }, 4000)
++    }
+   }
+ });
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"49651f87-705b-44c4-9900-f86fb1d55d2e\" name=\"Default Changelist\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/server.php\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/js/script.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/js/script.js\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\">\r\n    <execution />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitSEFilterConfiguration\">\r\n    <file-type-list>\r\n      <filtered-out-file-type name=\"LOCAL_BRANCH\" />\r\n      <filtered-out-file-type name=\"REMOTE_BRANCH\" />\r\n      <filtered-out-file-type name=\"TAG\" />\r\n      <filtered-out-file-type name=\"COMMIT_BY_MESSAGE\" />\r\n    </file-type-list>\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"1xRI5r15UPq4vqHSLw8XvgYox6C\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\r\n    <property name=\"nodejs_interpreter_path.stuck_in_default_project\" value=\"undefined stuck path\" />\r\n    <property name=\"nodejs_npm_path_reset_for_default_project\" value=\"true\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"preferences.lookFeel\" />\r\n    <property name=\"vue.rearranger.settings.migration\" value=\"true\" />\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration />\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"49651f87-705b-44c4-9900-f86fb1d55d2e\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1630311293591</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1630311293591</updated>\r\n      <workItem from=\"1630311296987\" duration=\"28000\" />\r\n      <workItem from=\"1630311326113\" duration=\"59000\" />\r\n      <workItem from=\"1630311399023\" duration=\"96000\" />\r\n      <workItem from=\"1630311497387\" duration=\"24000\" />\r\n      <workItem from=\"1630311704874\" duration=\"3776000\" />\r\n      <workItem from=\"1630655603704\" duration=\"4018000\" />\r\n      <workItem from=\"1630664939060\" duration=\"969000\" />\r\n      <workItem from=\"1630922928776\" duration=\"50000\" />\r\n      <workItem from=\"1630938086249\" duration=\"4476000\" />\r\n      <workItem from=\"1631036295130\" duration=\"6015000\" />\r\n      <workItem from=\"1631121742622\" duration=\"30000\" />\r\n      <workItem from=\"1631214115591\" duration=\"74000\" />\r\n      <workItem from=\"1631378978656\" duration=\"5743000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"classes cards add to index\">\r\n      <created>1631046953035</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1631046953035</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"classes cards add to index\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"classes cards add to index\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision b150770d1c4de111b9018c657f5acbf6d5684814)
++++ b/.idea/workspace.xml	(date 1631564232110)
+@@ -2,7 +2,6 @@
+ <project version="4">
+   <component name="ChangeListManager">
+     <list default="true" id="49651f87-705b-44c4-9900-f86fb1d55d2e" name="Default Changelist" comment="">
+-      <change afterPath="$PROJECT_DIR$/server.php" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/script.js" afterDir="false" />
+     </list>
+@@ -64,7 +63,9 @@
+       <workItem from="1631036295130" duration="6015000" />
+       <workItem from="1631121742622" duration="30000" />
+       <workItem from="1631214115591" duration="74000" />
+-      <workItem from="1631378978656" duration="5743000" />
++      <workItem from="1631378978656" duration="6753000" />
++      <workItem from="1631436315566" duration="3273000" />
++      <workItem from="1631564194539" duration="38000" />
+     </task>
+     <task id="LOCAL-00001" summary="classes cards add to index">
+       <created>1631046953035</created>
+@@ -73,7 +74,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1631046953035</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="work with server(POST form date)">
++      <created>1631395648080</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1631395648080</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -81,6 +89,7 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="classes cards add to index" />
+-    <option name="LAST_COMMIT_MESSAGE" value="classes cards add to index" />
++    <MESSAGE value="work with server(POST form date)" />
++    <option name="LAST_COMMIT_MESSAGE" value="work with server(POST form date)" />
+   </component>
+ </project>
+\ No newline at end of file
