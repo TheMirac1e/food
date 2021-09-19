@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="49651f87-705b-44c4-9900-f86fb1d55d2e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/form/screenshot0101.png" beforeDir="false" />
+    <list default="true" id="49651f87-705b-44c4-9900-f86fb1d55d2e" name="Default Changelist" comment="work with server(POST form date)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,6 +67,10 @@
       <workItem from="1631121742622" duration="30000" />
       <workItem from="1631214115591" duration="74000" />
       <workItem from="1631378978656" duration="5743000" />
+      <workItem from="1631821390251" duration="1337000" />
+      <workItem from="1632063875104" duration="988000" />
+      <workItem from="1632065011132" duration="45000" />
+      <workItem from="1632065063869" duration="8199000" />
     </task>
     <task id="LOCAL-00001" summary="classes cards add to index">
       <created>1631046953035</created>
@@ -90,9 +95,14 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="classes cards add to index" />
     <option name="LAST_COMMIT_MESSAGE" value="classes cards add to index" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
